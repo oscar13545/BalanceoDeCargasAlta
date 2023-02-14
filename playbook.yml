@@ -1,0 +1,44 @@
+- hosts: all
+  tasks: 
+  - name: instalar git 
+    apt:
+      name: git
+      state: present
+      update_cache: yes
+    - name: Clonar repositorio
+      shell: git clone https://github.com/oscar13545/balanceo-de-cargas.git
+    - name: install Docker
+
+    - name: Instalar apt-transport-https para docker
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - lsb-release
+          - gnupg
+        state: latest
+        update_cache: true
+
+    - name: Añadir Key
+      ansible.builtin.apt_key:
+        url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+        state: present
+
+    - name: Agregar el repositorio para instalar docker
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ ansible_architecture }}] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+    - name: Instalar Docker
+      ansible.builtin.apt:
+        name:
+          - docker
+          - docker.io
+          - docker-compose
+          - docker-registry
+        state: latest
+        update_cache: true
+
+    - name: Correr el archivo Dockerfile
+      shell: cd balanceo-de-cargas && docker-compose up
