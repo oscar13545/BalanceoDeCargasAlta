@@ -5,10 +5,10 @@
       name: git
       state: present
       update_cache: yes
+      
     - name: Clonar repositorio
       shell: git clone https://github.com/oscar13545/balanceo-de-cargas.git
-    - name: install Docker
-
+      
     - name: Instalar apt-transport-https para docker
       ansible.builtin.apt:
         name:
